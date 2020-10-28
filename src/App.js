@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 function App() {
   return (
     <Navbar>
       <NavItems icon="🛵" />
-      <NavItems icon="🛵" />
-      <NavItems icon="🛵" />
-      <NavItems icon="🛵" >
+      <NavItems icon="🚕" />
+      <NavItems icon="🚟" />
+      <NavItems icon="🚀" >
         <DropdownMenu />
       </NavItems>
 
@@ -16,11 +17,11 @@ function App() {
 
 function Navbar(props) {
   return (
-    <navbar className="navbar">
+    <nav className="navbar">
       <ul className="navbar-nav">
         {props.children}
       </ul>
-    </navbar>
+    </nav>
   )
 }
 function NavItems(props) {
@@ -28,34 +29,82 @@ function NavItems(props) {
 
   return (
     <li className="nav-item">
-      <a href="#" className="icon-button" onClick={() => { setOpen(!open) }}>
+      <p className="icon-button" onClick={() => { setOpen(!open) }}>
         {props.icon}
-      </a>
+      </p>
       { open && props.children}
     </li>
   )
 }
 
 function DropdownMenu() {
+  const [activeMenu, setActiveMenu] = useState('main');
+  const [menuHeight, setMenuHeight] = useState(null)
+  const dropdownRef = useRef(null);
+  useEffect(() => {
+    setMenuHeight(dropdownRef.current?.firstChild.offsetHeight)
+  }, [])
+
+  function calcHeight(el) {
+    console.log("Offset height : ", el.offsetHeight)
+    const height = el.offsetHeight;
+    setMenuHeight(height)
+  }
   function DropdownItem(props) {
     return (
-      <a href="" className="menu-item">
+      <p className="menu-item" onClick={() => props.goToMenu && setActiveMenu(props.goToMenu)}>
         <span className="icon-button">{props.leftIcon}</span>
         {props.children}
-        <span className="icon-button">{props.rightIcon}</span>
-      </a>
+        <span className="icon-right">{props.rightIcon}</span>
+      </p>
     )
   }
   return (
-    <div className="dropdown">
-      <DropdownItem>My Profile</DropdownItem>
-      <DropdownItem
-        leftIcon={'😂'}
-        rightIcon={'😍'}
+    <div className="dropdown" style={{ height: menuHeight }} ref={dropdownRef}>
+      <CSSTransition in={activeMenu === "main"}
+        unmountOnExit
+        timeout={500}
+        classNames="menu-primary"
+        onEnter={calcHeight}
       >
+        <div className="menu">
+          <DropdownItem>My Profile</DropdownItem>
+          <DropdownItem
+            leftIcon={'😂'}
+            rightIcon={'😎'}
+            goToMenu="setting"
+          >
+            Setting
+          </DropdownItem>
+        </div>
+      </CSSTransition>
 
-      </DropdownItem>
-    </div>
+      <CSSTransition in={activeMenu === "setting"} unmountOnExit timeout={500}
+        classNames="menu-secondary"
+        onEnter={calcHeight}
+      >
+        <div className="menu">
+
+          <DropdownItem leftIcon="⬅️" goToMenu="main"> <span>Tutorial</span>  </DropdownItem>
+          <DropdownItem
+            leftIcon="🏀"
+          >
+            Ball
+          </DropdownItem>
+          <DropdownItem
+            leftIcon="🥎"
+          >
+            Base
+          </DropdownItem>
+          <DropdownItem
+            leftIcon="🏐"
+          >
+            Basket
+          </DropdownItem>
+        </div>
+
+      </CSSTransition>
+    </div >
   )
 }
 

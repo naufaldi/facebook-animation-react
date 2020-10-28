@@ -26,9 +26,10 @@ ul {
   margin: 0;
   padding: 0;
 }
-a {
+p {
   color: var(--text-color);
   text-decoration: none;
+  cursor: pointer;
 }
 .navbar {
   height: var(--nav-size);
@@ -76,7 +77,7 @@ a {
   background-color: var(--bg);
   border: var(--border);
   border-radius: var(--border-radius);
-  padding: 1rem;
+  padding: 1.5rem 1rem;
   overflow: hidden;
 }
 .menu-item {
@@ -92,4 +93,36 @@ a {
 }
 .icon-right {
   margin-left: auto;
+}
+.menu {
+  width: 100%;
+}
+
+.menu-primary-enter {
+  position: absolute;
+  transform: translateX(-110%);
+}
+.menu-primary-enter-active {
+  transform: translateX(0%);
+  transition: all var(--speed) ease;
+}
+.menu-primary-exit {
+  position: absolute;
+}
+.menu-primary-exit-active {
+  transform: translateX(-110%);
+}
+
+.menu-secondary-enter {
+  transform: translateX(110%);
+}
+.menu-secondary-enter-active {
+  transform: translateX(0%);
+  transition: all var(--speed) ease;
+}
+.menu-secondary-exit {
+  position: absolute;
+}
+.menu-secondary-exit-active {
+  transform: translateX(110%);
 }

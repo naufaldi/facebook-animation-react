@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { CSSTransition } from 'react-transition-group';
+import { TransitionGroup,CSSTransition } from 'react-transition-group';
 
 function App() {
   return (
@@ -8,7 +8,13 @@ function App() {
       <NavItems icon="🚕" />
       <NavItems icon="🚟" />
       <NavItems icon="🚀" >
+     <CSSTransition
+     transitionName = "dropdown" 
+     transitionEnterTimeout={1000} transitionLeaveTimeout={1000}
+     >
         <DropdownMenu />
+     </CSSTransition>
+     
       </NavItems>
 
     </Navbar>
@@ -41,9 +47,10 @@ function DropdownMenu() {
   const [activeMenu, setActiveMenu] = useState('main');
   const [menuHeight, setMenuHeight] = useState(null)
   const dropdownRef = useRef(null);
-  useEffect(() => {
-    setMenuHeight(dropdownRef.current?.firstChild.offsetHeight)
-  }, [])
+
+  // useEffect(() => {
+  //   setMenuHeight(dropdownRef.current?.firstChild.offsetHeight)
+  // }, [])
 
   function calcHeight(el) {
     console.log("Offset height : ", el.offsetHeight)
@@ -60,7 +67,8 @@ function DropdownMenu() {
     )
   }
   return (
-    <div className="dropdown" style={{ height: menuHeight }} ref={dropdownRef}>
+    // <div className="dropdown" style={{ height: menuHeight }} ref={dropdownRef}>
+    <div className="dropdown" style={{ height: menuHeight }} >
       <CSSTransition in={activeMenu === "main"}
         unmountOnExit
         timeout={500}
